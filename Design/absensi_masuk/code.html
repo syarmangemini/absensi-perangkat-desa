@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Presensi Desa Mandiri</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "surface-dim": "#cbdbf5",
+                    "background": "#f8f9ff",
+                    "on-secondary-fixed": "#00201f",
+                    "surface-variant": "#d3e4fe",
+                    "tertiary-fixed-dim": "#a7cbe2",
+                    "surface-container-low": "#eff4ff",
+                    "outline": "#70787d",
+                    "error": "#ba1a1a",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#c3e8ff",
+                    "on-surface": "#0b1c30",
+                    "on-secondary-fixed-variant": "#00504e",
+                    "secondary-fixed-dim": "#6ad8d4",
+                    "on-primary-fixed": "#001e2b",
+                    "outline-variant": "#c0c8cd",
+                    "on-tertiary-container": "#b0d5ec",
+                    "on-tertiary-fixed": "#001e2c",
+                    "secondary-fixed": "#88f4f0",
+                    "on-background": "#0b1c30",
+                    "inverse-surface": "#213145",
+                    "secondary": "#006a68",
+                    "surface-bright": "#f8f9ff",
+                    "tertiary-container": "#3a5d71",
+                    "tertiary": "#214558",
+                    "on-surface-variant": "#40484d",
+                    "surface-container-high": "#dce9ff",
+                    "secondary-container": "#85f1ed",
+                    "on-primary-container": "#9bd7f7",
+                    "surface-tint": "#236580",
+                    "inverse-primary": "#92cfee",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface": "#f8f9ff",
+                    "surface-container-lowest": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed-variant": "#004d66",
+                    "on-secondary-container": "#006e6c",
+                    "primary": "#00475e",
+                    "primary-fixed": "#c0e8ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-error-container": "#93000a",
+                    "primary-fixed-dim": "#92cfee",
+                    "surface-container": "#e5eeff",
+                    "on-tertiary-fixed-variant": "#274b5e",
+                    "primary-container": "#1a5f7a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "4px",
+                    "xl": "32px",
+                    "margin-mobile": "16px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "gutter": "16px",
+                    "xs": "4px",
+                    "margin-desktop": "48px"
+            },
+            "fontFamily": {
+                    "label-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"]
+            },
+            "fontSize": {
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["22px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .status-strip-success { border-left: 4px solid #006a68; }
+        .status-strip-warning { border-left: 4px solid #ba1a1a; }
+        .camera-overlay {
+            background: linear-gradient(0deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-background shadow-sm fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile h-14">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged village official wearing a clean, formal Indonesian civil service uniform. The lighting is soft and natural, coming from a window in a modern office environment. The style is crisp and corporate, maintaining high contrast and clarity suitable for a government identification profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMgsP2VtjJccof0i9XwRm731DoXsGaAf6SAeXpZGIfTUiYTx-uVVaCb3CDIwVL-HtayDehtog97dpYLQ_fJIwtClUfjA3Apa5zBiY27qFttNccPDqxhUug0a7QGUtyH7owBDJzuHSIFRlaSqH1AAh1VcA5zxNQsqFb9GGS9sk35WrECliJXcEH54zV39z_lgFLCRwiPg7VbjHPnfQF33Q_I1ubc_o5V4m5So0xKonBG4FYV_Ao9Id05DLR-tytw1RgqnJpQIzq1g"/>
+</div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Desa Mandiri</h1>
+</div>
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed hover:bg-surface-container transition-colors p-2 rounded-full active:scale-95 duration-100">
+            notifications
+        </button>
+</header>
+<main class="pt-20 px-margin-mobile max-w-md mx-auto space-y-6">
+<!-- Time & Date Display -->
+<section class="text-center space-y-1">
+<div class="font-display-lg text-display-lg text-primary tracking-tight" id="current-time">08:14:52</div>
+<div class="font-label-lg text-label-lg text-on-surface-variant" id="current-date">Senin, 24 Mei 2024</div>
+</section>
+<!-- Attendance Status Grid -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-xl shadow-sm border border-outline-variant/30 flex flex-col items-center">
+<span class="material-symbols-outlined text-secondary mb-1">login</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Masuk</span>
+<span class="font-headline-sm text-headline-sm text-primary">--:--</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl shadow-sm border border-outline-variant/30 flex flex-col items-center">
+<span class="material-symbols-outlined text-outline mb-1">logout</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Pulang</span>
+<span class="font-headline-sm text-headline-sm text-primary">--:--</span>
+</div>
+</div>
+<!-- GPS & Radius Status Card -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-[0_2px_8px_rgba(26,95,122,0.04)] border border-outline-variant/20 space-y-4">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="font-label-lg text-label-lg font-bold">Lokasi Terdeteksi</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant pl-6">Kantor Desa Sukamaju, Kec. Maju Jaya</p>
+</div>
+<div class="bg-secondary-container/30 text-on-secondary-container px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span class="font-label-md text-label-md">Dalam Radius</span>
+</div>
+</div>
+<!-- Map Placeholder -->
+<div class="relative w-full h-32 rounded-lg overflow-hidden border border-outline-variant/40">
+<div class="absolute inset-0 bg-surface-dim flex items-center justify-center">
+<div class="w-full h-full bg-cover bg-center grayscale-[0.2]" data-location="Jakarta" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAqz7uLBPBvOqUC5MZpfEAi3gzoZO1kA67DvehazqEqcMNj5wtDEWzeEYRbtpxsfzg7XAPe1MgzvihX-mcjw7vFgfNr4ZokCKVh12tOHEBCG080k91wcmSnBuPhCqMA-FvcI8t_HTNxtZKPpSOM6xCX0PnlP-n9bT8MdrIAY91-GgnwM7Q30i3-nlQU8_PUu6XLw7ZPYAMUuesqIr21ev9LIKCFc92KY_Bg0ey-OnUJ5atNS2CE2c7s3R4ltWi-PGI8gg04bg75aQ')"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-8 h-8 bg-primary rounded-full border-2 border-white flex items-center justify-center animate-pulse">
+<div class="w-2 h-2 bg-white rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Camera Preview Placeholder -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-[0_2px_8px_rgba(26,95,122,0.04)] border border-outline-variant/20 space-y-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">photo_camera</span>
+<span class="font-label-lg text-label-lg">Verifikasi Wajah</span>
+</div>
+<div class="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-on-surface/5 border-2 border-dashed border-outline-variant group cursor-pointer transition-all hover:border-primary">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist workspace environment seen through a high-definition webcam lens. The background features blurred wooden textures and a soft desk lamp glow, creating a professional yet warm atmosphere. The image is framed as a camera viewfinder with subtle corner markings, emphasizing its role as a real-time facial verification preview in a corporate village administration app." id="camera-preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb8PoKJI0mwKz0eSY70pfQAUx-WvQMT2AUqmzKFmlcRdcopKTBH4M5oA9QuA-7pseCllj0eTnVrmTR6mBBXc3djiN4sSAS2nZRUfODB-7NG_iahJNfdt4WyAvdWRAammhXGyjnVV-OzyTCck7Bq_Ei4F5YcxK113OT7vf_KutKqyGgjYjp3w_N0iZzoN0keb0B5AY9YANqmiErsJlCTY98Rk8p__9w7Hhfhlqqe9G6WaYA_i4EtOiZa1_4z7wEnB9tVU9BbeKRmQ"/>
+<div class="absolute inset-0 camera-overlay flex flex-col items-center justify-end pb-6 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-white/90 backdrop-blur-sm text-primary px-6 py-2 rounded-full font-label-lg flex items-center gap-2 shadow-lg">
+<span class="material-symbols-outlined">refresh</span>
+                        Ambil Ulang
+                    </button>
+</div>
+<!-- Scanning Effect -->
+<div class="absolute inset-x-0 h-[2px] bg-secondary-container/50 shadow-[0_0_15px_#85f1ed] top-0 animate-[scan_3s_ease-in-out_infinite]"></div>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant text-center">Pastikan wajah berada di dalam area kotak dan pencahayaan cukup.</p>
+</div>
+<!-- Action Button -->
+<button class="w-full h-14 bg-primary text-on-primary rounded-xl font-headline-sm flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-transform duration-100 mb-8">
+<span class="material-symbols-outlined">fingerprint</span>
+            Absen Masuk
+        </button>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-sm py-xs h-16 bg-surface dark:bg-background border-t border-outline-variant dark:border-outline">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline py-1 px-4 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Beranda</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-xl py-1 px-4 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">fingerprint</span>
+<span class="font-label-md text-label-md">Presensi</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline py-1 px-4 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md text-label-md">Riwayat</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline py-1 px-4 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profil</span>
+</button>
+</nav>
+<script>
+        // Real-time Clock
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':');
+            const dateStr = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            
+            document.getElementById('current-time').textContent = timeStr;
+            document.getElementById('current-date').textContent = dateStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Scanning Animation Keyframe
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes scan {
+                0% { top: 0; }
+                50% { top: 100%; }
+                100% { top: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body></html>
