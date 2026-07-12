@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom'
 import TopAppBar from '../components/TopAppBar'
 import BottomNav from '../components/BottomNav'
 import AttendanceStatusCard from '../components/dashboard/AttendanceStatusCard'
@@ -7,6 +8,11 @@ import Announcements from '../components/dashboard/Announcements'
 import { profile, attendance, stats, announcements } from '../data'
 
 export default function Dashboard() {
+  const location = useLocation()
+  const recorded = location.state?.checkIn
+  const clockIn = recorded || attendance.clockIn
+  const status = recorded ? 'Sudah Presensi' : attendance.status
+
   return (
     <div className="bg-surface pb-24 text-on-surface">
       <TopAppBar />
@@ -20,7 +26,7 @@ export default function Dashboard() {
           </p>
         </section>
 
-        <AttendanceStatusCard status={attendance.status} clockIn={attendance.clockIn} />
+        <AttendanceStatusCard status={status} clockIn={clockIn} />
 
         <StatsBento stats={stats} />
 
