@@ -4,15 +4,42 @@ import TopAppBar from '../components/TopAppBar'
 import BottomNav from '../components/BottomNav'
 import Icon from '../components/Icon'
 import { profileDetail } from '../data'
+import { getProfile } from '../lib/db'
 
 export default function Profil() {
   const navigate = useNavigate()
   const fileRef = useRef(null)
 
+  const [p, setP] = useState(null) // data dari tabel perangkat_desa
   const [avatar, setAvatar] = useState(profileDetail.avatar)
   const [dark, setDark] = useState(
     () => typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
   )
+
+  // Muat profil dari Supabase (fallback ke data statis)
+  useEffect(() => {
+    let active = true
+    getProfile()
+      .then((row) => {
+        if (!active || !row) return
+        setP(row)
+        setAvatar(row.foto_url || profileDetail.avatar)
+      })
+      .catch(() => {})
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const view = {
+    name: p?.nama ?? profileDetail.name,
+    nip: p?.nip ?? profileDetail.nip,
+    status: p?.status_kepegawaian ?? profileDetail.status,
+    position: p?.jabatan ?? profileDetail.position,
+    unit: p?.unit_kerja ?? profileDetail.unit,
+    phone: p?.telepon ?? profileDetail.phone,
+    address: p?.alamat ?? profileDetail.address,
+  }
 
   // Apply / remove `dark` class on <html>
   useEffect(() => {
@@ -60,15 +87,15 @@ export default function Profil() {
             </div>
             <div>
               <h2 className="font-headline-sm text-headline-sm text-on-surface">
-                {profileDetail.name}
+                {view.name}
               </h2>
               <p className="font-label-md text-label-md text-outline">
-                NIP: {profileDetail.nip}
+                NIP: {view.nip}
               </p>
               <div className="mt-sm inline-flex items-center gap-1.5 rounded-full bg-secondary-container px-3 py-1 text-on-secondary-container">
                 <Icon name="verified" filled className="text-[14px]" />
                 <span className="font-label-md text-label-md">
-                  Status Kepegawaian: {profileDetail.status}
+                  Status Kepegawaian: {view.status}
                 </span>
               </div>
             </div>
@@ -86,12 +113,12 @@ export default function Profil() {
               <div>
                 <p className="font-label-md text-label-md text-outline">Jabatan</p>
                 <p className="font-body-md text-body-md font-semibold">
-                  {profileDetail.position}
+                  {view.position}
                 </p>
               </div>
               <div>
                 <p className="font-label-md text-label-md text-outline">Unit Kerja</p>
-                <p className="font-body-md text-body-md font-semibold">{profileDetail.unit}</p>
+                <p className="font-body-md text-body-md font-semibold">{view.unit}</p>
               </div>
             </div>
           </div>
@@ -104,11 +131,11 @@ export default function Profil() {
             <div className="space-y-sm">
               <div className="flex items-center gap-3">
                 <Icon name="phone" className="text-outline text-[20px]" />
-                <p className="font-body-md text-body-md">{profileDetail.phone}</p>
+                <p className="font-body-md text-body-md">{view.phone}</p>
               </div>
               <div className="flex items-start gap-3">
                 <Icon name="location_on" className="text-outline text-[20px]" />
-                <p className="font-body-md text-body-md">{profileDetail.address}</p>
+                <p className="font-body-md text-body-md">{view.address}</p>
               </div>
             </div>
           </div>

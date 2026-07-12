@@ -37,6 +37,43 @@ export async function getPresensiBulan(userId = CURRENT_USER_ID, year, monthInde
   return data || []
 }
 
+// Ambil presensi pada tanggal tertentu (default: hari ini)
+export async function getTodayPresensi(userId = CURRENT_USER_ID, tanggal) {
+  const tgl = tanggal || new Date().toISOString().slice(0, 10)
+  const { data, error } = await supabase
+    .from('presensi')
+    .select('*')
+    .eq('perangkat_id', userId)
+    .eq('tanggal', tgl)
+    .maybeSingle()
+  if (error) throw error
+  return data
+}
+
+// Agregat statistik dari bulan terakhir yang memiliki data presensi
+export async function getPresensiStats(userId = CURRENT_USER_ID) {
+  const { data, error } = await supabase
+    .from('presensi')
+    .select('tanggal, status')
+    .eq('perangkat_id', userId)
+    .order('tanggal', { ascending: false })
+  if (error) throw error
+  if (!data || !data.length) return null
+
+  const latestMonth = data[0].tanggal.slice(0, 7) // 'YYYY-MM'
+  const monthRows = data.filter((r) => r.tanggal.slice(0, 7) === latestMonth)
+  const counts = { hadir: 0, izin: 0, alpha: 0, sakit: 0, dinas: 0 }
+  monthRows.forEach((r) => {
+    if (counts[r.status] != null) counts[r.status] += 1
+  })
+  const [y, m] = latestMonth.split('-').map(Number)
+  const monthLabel = new Date(y, m - 1, 1).toLocaleDateString('id-ID', {
+    month: 'long',
+    year: 'numeric',
+  })
+  return { monthLabel, counts }
+}
+
 // Catat / perbarui presensi (upsert per user+tanggal)
 export async function insertPresensi({
   userId = CURRENT_USER_ID,
