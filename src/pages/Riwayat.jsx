@@ -1,8 +1,40 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import TopAppBar from '../components/TopAppBar'
 import BottomNav from '../components/BottomNav'
 import Icon from '../components/Icon'
 import { historyMonths } from '../data'
+import { getPresensiBulan } from '../lib/db'
+
+// Bangun array hari dari hasil query Supabase (fallback ke hari kerja default)
+function buildDaysFromDb(year, monthIndex, rows) {
+  const total = new Date(year, monthIndex + 1, 0).getDate()
+  const byDay = {}
+  rows.forEach((r) => {
+    const d = Number(r.tanggal.split('-')[2])
+    byDay[d] = {
+      day: d,
+      status: r.status,
+      login: r.jam_masuk || null,
+      logout: r.jam_pulang || null,
+      note: r.keterangan || null,
+    }
+  })
+  const days = []
+  for (let d = 1; d <= total; d++) {
+    if (byDay[d]) days.push(byDay[d])
+    else {
+      const dow = new Date(year, monthIndex, d).getDay()
+      const weekend = dow === 0 || dow === 6
+      days.push({
+        day: d,
+        status: weekend ? null : 'hadir',
+        login: weekend ? null : '07:55',
+        logout: weekend ? null : '16:05',
+      })
+    }
+  }
+  return days
+}
 
 const STATUS_LABEL = { hadir: 'Hadir', izin: 'Izin', alpha: 'Alpha' }
 
@@ -105,21 +137,40 @@ function LogItem({ month, record }) {
 
 export default function Riwayat() {
   const [selectedKey, setSelectedKey] = useState(historyMonths[1].key)
+  const [days, setDays] = useState(null) // null => pakai month.days statis
 
   const month = useMemo(
     () => historyMonths.find((m) => m.key === selectedKey) || historyMonths[0],
     [selectedKey]
   )
-  const cells = useMemo(() => buildCalendar(month), [month])
-  const counts = useMemo(() => countStatus(month.days), [month])
+  const activeDays = days || month.days
+
+  // Muat presensi dari Supabase untuk bulan terpilih (fallback ke data statis)
+  useEffect(() => {
+    let active = true
+    setDays(null)
+    getPresensiBulan(month.year, month.monthIndex)
+      .then((rows) => {
+        if (active && rows.length) setDays(buildDaysFromDb(month.year, month.monthIndex, rows))
+      })
+      .catch(() => {
+        /* fallback ke month.days */
+      })
+    return () => {
+      active = false
+    }
+  }, [selectedKey, month])
+
+  const cells = useMemo(() => buildCalendar({ ...month, days: activeDays }), [month, activeDays])
+  const counts = useMemo(() => countStatus(activeDays), [activeDays])
   const logs = useMemo(
-    () => month.days.filter((d) => d.status).slice().reverse().slice(0, 8),
-    [month]
+    () => activeDays.filter((d) => d.status).slice().reverse().slice(0, 8),
+    [activeDays]
   )
 
   function downloadRecap() {
     const rows = [['Tanggal', 'Status', 'Masuk', 'Pulang', 'Keterangan']]
-    month.days.forEach((d) => {
+    activeDays.forEach((d) => {
       if (!d.status) return
       rows.push([
         dateLabel(month.year, month.monthIndex, d.day),

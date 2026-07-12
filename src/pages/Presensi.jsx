@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import TopAppBar from '../components/TopAppBar'
 import BottomNav from '../components/BottomNav'
 import Icon from '../components/Icon'
+import { insertPresensi } from '../lib/db'
 
 const MAP_IMG =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuAqz7uLBPBvOqUC5MZpfEAi3gzoZO1kA67DvehazqEqcMNj5wtDEWzeEYRbtpxsfzg7XAPe1MgzvihX-mcjw7vFgfNr4ZokCKVh12tOHEBCG080k91wcmSnBuPhCqMA-FvcI8t_HTNxtZKPpSOM6xCX0PnlP-n9bT8MdrIAY91-GgnwM7Q30i3-nlQU8_PUu6XLw7ZPYAMUuesqIr21ev9LIKCFc92KY_Bg0ey-OnUJ5atNS2CE2c7s3R4ltWi-PGI8gg04bg75aQ'
@@ -97,14 +98,24 @@ export default function Presensi() {
     if (done) return
     setSubmitting(true)
     const current = new Date()
-    // Simulate a short verification delay
+    const time = formatTime(current)
+    const tanggal = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}-${String(current.getDate()).padStart(2, '0')}`
+    // Simulate a short verification delay, then persist to Supabase
     setTimeout(() => {
-      const time = formatTime(current)
-      setCheckIn(time)
-      setSubmitting(false)
-      setDone(true)
-      // Return to dashboard and reflect the recorded check-in time
-      setTimeout(() => navigate('/', { state: { checkIn: time } }), 1500)
+      insertPresensi({
+        tanggal,
+        status: 'hadir',
+        jamMasuk: time.slice(0, 5),
+        lokasi: 'Kantor Desa Sukamaju, Kec. Maju Jaya',
+      })
+        .catch((err) => console.warn('Gagal menyimpan presensi:', err))
+        .finally(() => {
+          setCheckIn(time)
+          setSubmitting(false)
+          setDone(true)
+          // Return to dashboard and reflect the recorded check-in time
+          setTimeout(() => navigate('/', { state: { checkIn: time } }), 1500)
+        })
     }, 800)
   }
 
