@@ -27,6 +27,47 @@
   .camera-overlay {
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
   }
+  .elevation-l1 {
+    box-shadow: 0px 2px 8px rgba(26, 95, 122, 0.04);
+  }
+  .glass-header {
+    backdrop-filter: blur(10px);
+    background: rgba(248, 249, 255, 0.85);
+  }
+  .tap-scale:active {
+    transform: scale(0.97);
+  }
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .calendar-day {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .calendar-dot {
+    position: absolute;
+    bottom: 4px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .status-strip {
+    width: 4px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 }
 
 @keyframes float {
